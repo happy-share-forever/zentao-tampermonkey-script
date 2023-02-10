@@ -6,6 +6,9 @@ export default {
     file: 'dist/zentao.user.js',
     format: 'iife'
   },
+  watch: {
+    exclude: 'node_modules/**'
+  },
   plugins: [
     {
       banner() {

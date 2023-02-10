@@ -2,16 +2,26 @@
 
 ZenTao 样式辅助 & 功能扩展
 
-## Dev
+## Development
+```bash
+# 安装依赖
+pnpm install
+# 开发
+pnpm run dev
+# 打包
+npm run build
+```
+
+## Install
 
 点击安装 [正式版](https://raw.githubusercontent.com/happy-share-forever/tampermonkey-script/main/ZenTao/ZenTao.user.js)
 
 点击安装 [测试版](https://raw.githubusercontent.com/happy-share-forever/tampermonkey-script/test/ZenTao/ZenTao.user.js)
 
 ## Compatible version
+
 - 点击安装 [v10](https://raw.githubusercontent.com/happy-share-forever/tampermonkey-script/main/ZenTao/ZenTao.user.js)
 - 点击安装 [v12](https://raw.githubusercontent.com/happy-share-forever/tampermonkey-script/main/ZenTao/ZenTao.v12.user.js)
-
 
 ## Usage
 
