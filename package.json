@@ -1,6 +1,6 @@
 {
   "name": "zentao-tampermonkey-script",
-  "version": "2.8",
+  "version": "2.9",
   "description": "ZenTao style and function enhancement",
   "author": "",
   "main": "main.js",
