@@ -7,7 +7,7 @@ export default {
     format: 'iife'
   },
   watch: {
-    exclude: 'node_modules/**'
+    exclude: ['node_modules/**', 'dist/**']
   },
   plugins: [
     {

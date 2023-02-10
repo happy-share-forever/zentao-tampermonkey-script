@@ -9,7 +9,7 @@ pnpm install
 # 开发
 pnpm run dev
 # 打包
-npm run build
+pnpm run build
 ```
 
 ## Install
