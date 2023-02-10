@@ -1,0 +1,17 @@
+{
+  "name": "zentao-tampermonkey-script",
+  "version": "2.8",
+  "description": "ZenTao style and function enhancement",
+  "author": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c ./rollup.config.js",
+    "dev": "rollup -c ./rollup.config.js -w",
+    "lib": "pnpm run build"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^3.14.0"
+  }
+}
