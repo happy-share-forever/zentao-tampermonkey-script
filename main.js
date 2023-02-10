@@ -51,7 +51,12 @@ function enhanceKanBan (document) {
   const target = $(document.querySelectorAll('.board-story'))
   // 已经添加过了
   if (target.find('a:contains("复制分支")').length > 0) return
+  enhanceKanBanStory(target, document);
+  enhanceKanBanTask(document);
+  enhanceKanBanClosedTaskWithCache(document)
+}
 
+function enhanceKanBanStory (target, document) {
   target.each(function () {
     const $el = $(this)
     const $ul = $el.find('ul')
@@ -88,9 +93,18 @@ function enhanceKanBan (document) {
       $dropdown.removeClass('open')
     })
   })
+}
 
-  // 已关闭的任务增强
-  enhanceKanBanClosedTaskWithCache(document)
+function enhanceKanBanTask (document) {
+  const taskInfos = [...document.querySelectorAll('.info')]
+  for (const taskInfo of taskInfos) {
+    const $taskInfo = $(taskInfo)
+    const id = $taskInfo.parent().attr('data-id')
+    const $no = $(document.createElement('a'))
+    $no.text('#' + id)
+    $no.addClass('small')
+    $taskInfo.prepend($no)
+  }
 }
 
 const kanbanDataCache = {}
