@@ -1,8 +1,13 @@
 import './src/styleProxy.js'
-import { debounce } from './src/utils.js'
+import { Context } from './src/class/Context.js'
+import { debounce, isAllText } from './src/utils.js'
+import { Button } from './src/class/Button.js'
+import { enhanceHistoryList } from './src/enhanceHistoryList.js'
+import { enhanceTask } from './src/enhanceTask.js'
+import { ALL_TEXT, CN_REG, NOT_CLOSED } from './src/constants.js'
+import { enhanceKanBanStory } from './src/enhanceKanBan.js'
 
 const _window = window
-const urlDomain = location.origin
 let cachedPrefix = _window.localStorage.getItem('_customFilter_projectPrefix')
 if (!cachedPrefix) {
   cachedPrefix = _window.prompt('请补全项目代号，之后可以通过 localStorage _customFilter_projectPrefix 来修改。', 'XXX')
@@ -11,88 +16,14 @@ if (!cachedPrefix) {
 
 const projectPrefix = cachedPrefix || 'XXX'
 
-function enhanceTask (document) {
-  const target = $(document.querySelectorAll('.main-table td.c-actions'))
-  if (target.find('span:contains("copy:")').length > 0) return
-  target.each(function () {
-    const $el = $(this).parent()
-    const taskId = $el.attr('data-id') || $el.find('.cell-id').find('a').text()
-    const $text = $('<span>copy:</span>')
-    $text.appendTo($el.find('.c-actions'))
-    const $copyId = $(document.createElement('a'))
-    $copyId.html('<span class="text"> 分支</span>')
-    $copyId.on('click', function () {
-      GM_setClipboard(`feature/${projectPrefix}-${taskId}`, { type: 'text', mimetype: 'text/plain' })
-    })
-    $copyId.appendTo($el.find('.c-actions'))
-
-    // 复制标题
-    const $copyTitle = $(document.createElement('a'))
-    $copyTitle.html('<span class="text"> 标题</span>')
-    $copyTitle.on('click', function () {
-      let title = window.location.search.includes('f=bug')
-        ? $($el.children()[3]).attr('title')
-        : $(document).find(`tr[data-id=${taskId}]`).find('.c-name').attr('title')
-      GM_setClipboard(`${projectPrefix}-${taskId} ${title}`, { type: 'text', mimetype: 'text/plain' })
-    })
-    $copyTitle.appendTo($el.find('.c-actions'))
-
-    // 复制链接
-    const $copyLink = $(document.createElement('a'))
-    $copyLink.html('<span class="text"> 链接</span>')
-    $copyLink.on('click', function () {
-      GM_setClipboard(`${urlDomain}/index.php?m=task&f=view&taskID=${taskId}`, { type: 'text', mimetype: 'text/plain' })
-    })
-    $copyLink.appendTo($el.find('.c-actions'))
-  })
-}
-
-function enhanceKanBan (document) {
+function enhanceKanBan (ctx) {
+  const document = ctx.document
   const target = $(document.querySelectorAll('.board-story'))
   // 已经添加过了
   if (target.find('a:contains("复制分支")').length > 0) return
-  enhanceKanBanStory(target, document);
-  enhanceKanBanTask(document);
-  enhanceKanBanClosedTaskWithCache(document)
-}
-
-function enhanceKanBanStory (target, document) {
-  target.each(function () {
-    const $el = $(this)
-    const $ul = $el.find('ul')
-    const storyId = $el.attr('data-id')
-    const $copyIdLi = $(document.createElement('li'))
-    $copyIdLi.html('<a>复制分支</a>')
-    $copyIdLi.on('click', function () {
-      GM_setClipboard(`feature/${projectPrefix}-${storyId}`, { type: 'text', mimetype: 'text/plain' })
-    })
-    $copyIdLi.appendTo($ul)
-
-    const $copyTitle = $(document.createElement('li'))
-    $copyTitle.html('<a>复制标题</a>')
-    $copyTitle.on('click', function () {
-      const title = $el.find('.group-title').attr('title')
-      GM_setClipboard(`${projectPrefix}-${storyId} ${title}`, { type: 'text', mimetype: 'text/plain' })
-    })
-    $copyTitle.appendTo($ul)
-
-    const $copyLink = $(document.createElement('li'))
-    $copyLink.html('<a>复制链接</a>')
-    $copyLink.on('click', function () {
-      const link = `${urlDomain}/index.php?m=story&f=view&storyID=${storyId}`
-      GM_setClipboard(link, { type: 'text', mimetype: 'text/plain' })
-    })
-    $copyLink.appendTo($ul)
-
-    // hover 增强
-    const $dropdown = $el.find('li.dropdown')
-    $dropdown.on('mouseover', function () {
-      $dropdown.addClass('open')
-      $ul.css('margin-top', '-30px')
-    }).on('mouseleave', function () {
-      $dropdown.removeClass('open')
-    })
-  })
+  enhanceKanBanStory(target, ctx)
+  enhanceKanBanTask(document, ctx)
+  enhanceKanBanClosedTaskWithCache(ctx)
 }
 
 function enhanceKanBanTask (document) {
@@ -109,30 +40,30 @@ function enhanceKanBanTask (document) {
 
 const kanbanDataCache = {}
 
-function enhanceKanBanClosedTaskWithCache (document) {
-  const executionID = new URL(_window.location.href).searchParams.get('executionID')
+function enhanceKanBanClosedTaskWithCache (ctx) {
+  const executionID = new URL(ctx.tW.location.href).searchParams.get('executionID')
   if (kanbanDataCache[executionID]) {
-    enhanceKanBanClosedTask(kanbanDataCache[executionID], document)
+    enhanceKanBanClosedTask(kanbanDataCache[executionID], ctx)
   } else {
-    debouncedEnhanceKanBanClosedTask(document)
+    debouncedEnhanceKanBanClosedTask(ctx)
   }
 }
 
 const debouncedEnhanceKanBanClosedTask = debounce(queryKanbanAndEnhanceKanBanClosedTask, 100)
 
-function queryKanbanAndEnhanceKanBanClosedTask (document) {
-  const executionID = new URL(_window.location.href).searchParams.get('executionID')
-  $.get(`${urlDomain}/index.php?m=execution&f=kanban&t=json&executionID=${executionID}`, function (res) {
+function queryKanbanAndEnhanceKanBanClosedTask (ctx) {
+  const executionID = new URL(ctx.tW.location.href).searchParams.get('executionID')
+  $.get(`${ctx.urlDomain}/index.php?m=execution&f=kanban&t=json&executionID=${executionID}`, function (res) {
     const kanbanData = JSON.parse(JSON.parse(res).data)
     kanbanDataCache[executionID] = kanbanData
-    enhanceKanBanClosedTask(kanbanData, document)
+    enhanceKanBanClosedTask(kanbanData, ctx)
   })
 }
 
-function enhanceKanBanClosedTask (kanbanData, document) {
+function enhanceKanBanClosedTask (kanbanData, ctx) {
   const kanbanTasksMap = getKanbanTasksMap(kanbanData)
   const closedTasksMap = getKanbanClosedTaskMap(kanbanTasksMap)
-  const tasksDom = [...document.querySelectorAll('.task-assignedTo,.bug-assignedTo')]
+  const tasksDom = [...ctx.document.querySelectorAll('.task-assignedTo,.bug-assignedTo')]
   for (const taskDom of tasksDom) {
     const u = new URL(taskDom.parentElement.previousElementSibling.href)
     const taskID = u.searchParams.get('bugID') ? u.searchParams.get('bugID') : u.searchParams.get('taskID')
@@ -145,7 +76,7 @@ function enhanceKanBanClosedTask (kanbanData, document) {
   }
 
   // 增强看板：增加角色过滤器
-  enhanceRoleFilter(document)
+  enhanceRoleFilter(ctx.document)
 }
 
 function getKanbanTasksMap (kanbanData) {
@@ -165,7 +96,7 @@ function getKanbanClosedTaskMap (kanbanTasksMap) {
   return closedTasksMap
 }
 
-function enhanceDialog (mutationsList) {
+function enhanceDialog (mutationsList, ctx) {
   mutationsList.forEach(item => {
     if (item.addedNodes.length > 0) {
       const firstChild = $(item.addedNodes[0])
@@ -173,7 +104,7 @@ function enhanceDialog (mutationsList) {
         // 任务详情弹窗
         firstChild.off('load').on('load', function () {
           const doc = firstChild[0].contentWindow.document
-          enhanceHistoryList(doc)
+          enhanceHistoryList(ctx)
           const toolbar = $(doc.querySelector('.main-actions > .btn-toolbar'))
 
           // 复制分支
@@ -201,7 +132,7 @@ function enhanceDialog (mutationsList) {
           $copyLink.addClass('btn btn-link showinonlybody')
           $copyLink.html('<span class="text"></span> 复制链接')
           $copyLink.on('click', function () {
-            GM_setClipboard(`${urlDomain}/index.php?m=task&f=view&taskID=${taskId}`, { type: 'text', mimetype: 'text/plain' })
+            GM_setClipboard(`${ctx.urlDomain}/index.php?m=task&f=view&taskID=${taskId}`, { type: 'text', mimetype: 'text/plain' })
           })
           $copyLink.appendTo(toolbar)
 
@@ -251,24 +182,6 @@ function hiddenBoardItemWithPrimaryBtn (doc) {
       $tr.css('display', 'table-row')
     }
   })
-}
-
-function isAllText (btnArr) {
-  return btnArr.some(b => {
-    const trim = $(b).text().trim()
-    return !trim || trim === ALL_TEXT
-  })
-}
-
-const ALL_TEXT = '全部'
-const NOT_CLOSED = '未关闭'
-const CN_REG = /[^\x00-\xff]+/gm // 过滤中文字符的正则
-
-class Button {
-  constructor (name, exclusiveList) {
-    this.name = name
-    this.exclusiveList = exclusiveList
-  }
 }
 
 function enhanceRoleFilter (doc) {
@@ -334,49 +247,21 @@ function enhanceRoleFilter (doc) {
   }
 }
 
-// 历史记录只展示备注
-function enhanceHistoryList (doc) {
-  if (doc.querySelectorAll('.histories-custom-filter-btn').length) return
-  const fn = function (type) {
-    $(doc.querySelectorAll('.histories-list li')).each(function () {
-      const $this = $(this)
-      if (type === 'hide' && $this.text().indexOf('备注') === -1) {
-        $this.hide()
-      } else {
-        $this.show()
-      }
-    })
-  }
-  const $titleBox = $(doc.querySelector('.histories .detail-title'))
-  const $hideBtn = $(doc.createElement('a'))
-  $hideBtn.addClass('btn btn-link pull-right histories-custom-filter-btn')
-  $hideBtn.html('只看备注')
-  $hideBtn.on('click', function () {
-    if ($hideBtn.html() === '只看备注') {
-      fn('hide')
-      $hideBtn.html('查看全部')
-    } else {
-      fn('show')
-      $hideBtn.html('只看备注')
-    }
-  })
-  $hideBtn.appendTo($titleBox)
-}
-
 // 任务弹窗关闭后 iframe 重新 reload了，所以需要监听
 const executionIframe = document.querySelector('#appIframe-execution')
 if (executionIframe) {
+  const ctx = Context.of(executionIframe, _window)
   executionIframe.onload = function () {
-    setTimeout(() => executionIframe.contentWindow.dispatchEvent(new Event('resize')), 500)
-    const doc = executionIframe.contentWindow.document
-    enhanceTask(doc)
-    enhanceKanBan(doc)
-    enhanceHistoryList(doc)
+    setTimeout(() => ctx.window.dispatchEvent(new Event('resize')), 500)
+    const doc = ctx.document
+    enhanceTask(ctx)
+    enhanceKanBan(ctx)
+    enhanceHistoryList(ctx)
     const observer = new MutationObserver((mutationsList) => {
-      enhanceTask(doc)
-      enhanceKanBan(doc)
-      enhanceDialog(mutationsList)
-      enhanceHistoryList(doc)
+      enhanceTask(ctx)
+      enhanceKanBan(ctx)
+      enhanceDialog(mutationsList, ctx)
+      enhanceHistoryList(ctx)
     })
     observer.observe(doc.body, {
       childList: true,
