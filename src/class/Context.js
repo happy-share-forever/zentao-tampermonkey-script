@@ -6,6 +6,7 @@ if (!cachedPrefix) {
 }
 
 const projectPrefix = cachedPrefix || 'XXX'
+
 export class Context {
   executionIframe
   tW
@@ -25,9 +26,14 @@ export class Context {
     return this.tW.location.origin
   }
 
+  get _window () {
+    return this.tW
+  }
+
   get document () {
     return this.executionIframe.contentWindow.document
   }
+
   static of (executionIframe) {
     return new Context({
       executionIframe
