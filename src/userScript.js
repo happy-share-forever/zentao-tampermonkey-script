@@ -6,7 +6,7 @@ export const getUserScript = () => `// ==UserScript==
 // @version      ${pkg.version}
 // @description  ${pkg.description}
 // @author       ${pkg.author}
-// @include      /^https:\\/\\/.*zentao.*$/
+// @include      /^https:\\/\\/zentao.*$/
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
 // ==/UserScript==
