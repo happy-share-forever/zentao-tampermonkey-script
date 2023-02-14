@@ -1,6 +1,6 @@
 {
   "name": "zentao-tampermonkey-script",
-  "version": "2.10",
+  "version": "2.11",
   "description": "ZenTao style and function enhancement",
   "author": "happy share forever core team",
   "main": "main.js",
@@ -8,10 +8,13 @@
   "scripts": {
     "build": "rollup -c ./rollup.config.js",
     "dev": "rollup -c ./rollup.config.js -w",
-    "lib": "pnpm run build"
+    "lib": "pnpm run build",
+    "publish": "pnpm run lib && node ./.publish/index.js"
   },
   "license": "ISC",
   "devDependencies": {
-    "rollup": "^3.14.0"
+    "fs-extra": "^11.1.0",
+    "rollup": "^3.14.0",
+    "simple-git": "^3.16.0"
   }
 }

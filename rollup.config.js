@@ -3,7 +3,7 @@ import { getUserScript } from './src/userScript.js'
 export default {
   input: 'main.js',
   output: {
-    file: 'dist/zentao.user.js',
+    file: 'dist/ZenTao.user.js',
     format: 'iife'
   },
   watch: {
