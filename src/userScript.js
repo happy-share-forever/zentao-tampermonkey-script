@@ -10,4 +10,4 @@ export const getUserScript = () => `// ==UserScript==
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
 // ==/UserScript==
-        `
+`
