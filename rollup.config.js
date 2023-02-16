@@ -4,16 +4,10 @@ export default {
   input: 'main.js',
   output: {
     file: 'dist/ZenTao.user.js',
-    format: 'iife'
+    format: 'iife',
+    banner: getUserScript()
   },
   watch: {
     exclude: ['node_modules/**', 'dist/**']
-  },
-  plugins: [
-    {
-      banner() {
-        return getUserScript()
-      }
-    }
-  ]
+  }
 }
