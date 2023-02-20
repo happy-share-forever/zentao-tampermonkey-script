@@ -14,10 +14,10 @@ if (executionIframe) {
     enhanceTask(ctx)
     enhanceKanBan(ctx)
     enhanceHistoryList(ctx)
-    const observer = new MutationObserver((mutationsList) => {
+    const observer = new MutationObserver((mutations) => {
       enhanceTask(ctx)
       enhanceKanBan(ctx)
-      enhanceDialog(mutationsList, ctx)
+      enhanceDialog(mutations, ctx)
       enhanceHistoryList(ctx)
     })
     observer.observe(doc.body, {

@@ -1,8 +1,8 @@
 import { enhanceHistoryList } from './enhanceHistoryList.js'
 
-export function enhanceDialog (mutationsList, ctx) {
+export function enhanceDialog (mutations, ctx) {
   const document = ctx.document
-  mutationsList.forEach(item => {
+  mutations.forEach(item => {
     if (item.addedNodes.length > 0) {
       const firstChild = $(item.addedNodes[0])
       if (firstChild.attr('id') === 'iframe-triggerModal') {
