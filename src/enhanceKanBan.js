@@ -221,7 +221,7 @@ function enhanceKanBanClosedTask (kanbanData, ctx) {
 
 export function enhanceKanBan (ctx) {
   const document = ctx.document
-  const $container = $(document.getElementById('mainMenu'))
+  const $container = $(document.getElementById('#kanban > table'))
   if ($container.hasClass('enhanceKanBan')) return
   $container.addClass('enhanceKanBan')
   const target = $(document.querySelectorAll('.board-story'))
