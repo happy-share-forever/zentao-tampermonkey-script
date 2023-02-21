@@ -222,8 +222,9 @@ function enhanceKanBanClosedTask (kanbanData, ctx) {
 export function enhanceKanBan (ctx) {
   const document = ctx.document
   const $container = $(document.getElementById('#kanban > table'))
-  if ($container.hasClass('enhanceKanBan')) return
+  if ($container.hasClass('enhanceKanBan') && ctx.kanbanRefreshed) return
   $container.addClass('enhanceKanBan')
+  ctx.setKanbanRefreshTag()
   const target = $(document.querySelectorAll('.board-story'))
   // 已经添加过了
   if (target.find('a:contains("复制分支")').length > 0) return

@@ -11,11 +11,13 @@ export class Context {
   executionIframe
   tW
   projectPrefix
+  kanbanRefreshTag
 
   constructor ({ executionIframe }) {
     this.executionIframe = executionIframe
     this.tW = _window
     this.projectPrefix = projectPrefix
+    this.kanbanRefreshTag = false
   }
 
   get window () {
@@ -32,6 +34,16 @@ export class Context {
 
   get document () {
     return this.executionIframe.contentWindow.document
+  }
+
+  get kanbanRefreshed () {
+    return this.kanbanRefreshTag === true
+  }
+  setKanbanRefreshTag () {
+    this.kanbanRefreshTag = true
+  }
+  resetKanbanRefreshTag () {
+    this.kanbanRefreshTag = false
   }
 
   static of (executionIframe) {
