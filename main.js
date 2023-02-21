@@ -16,6 +16,7 @@ function enhanceExecution () {
       enhanceKanBan(ctx)
       enhanceHistoryList(ctx)
       const observer = new MutationObserver((mutations) => {
+        ctx.resetKanbanRefreshTag()
         enhanceTask(ctx)
         enhanceKanBan(ctx)
         enhanceDialog(mutations, ctx)
