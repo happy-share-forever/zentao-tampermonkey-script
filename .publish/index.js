@@ -7,7 +7,7 @@ import pkg from '../package.json' assert { type: 'json' }
 import { rimraf } from 'rimraf';
 //
 const rootPath = path.resolve(path.join('.', '.publish'))
-const workspace = path.resolve(path.join(rootPath, 'workspace'))
+const workspace = path.join(rootPath, 'workspace')
 const distFilePath = path.resolve(path.join('.', config.distPath, config.fileName))
 const targetFilePath = path.join(workspace, ...config.publicPath.split('/'), config.fileName)
 const branchName = `publish/${Date.now()}`
