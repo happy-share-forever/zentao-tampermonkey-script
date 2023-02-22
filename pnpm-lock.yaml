@@ -2,11 +2,13 @@ lockfileVersion: 5.4
 
 specifiers:
   fs-extra: ^11.1.0
+  rimraf: ^4.1.2
   rollup: ^3.14.0
   simple-git: ^3.16.0
 
 devDependencies:
   fs-extra: 11.1.0
+  rimraf: 4.1.2
   rollup: 3.14.0
   simple-git: 3.16.0
 
@@ -67,6 +69,12 @@ packages:
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
+    dev: true
+
+  /rimraf/4.1.2:
+    resolution: {integrity: sha512-BlIbgFryTbw3Dz6hyoWFhKk+unCcHMSkZGrTFVAx2WmttdBSonsdtRlwiuTbDqTKr+UlXIUqJVS4QT5tUzGENQ==}
+    engines: {node: '>=14'}
+    hasBin: true
     dev: true
 
   /rollup/3.14.0:
