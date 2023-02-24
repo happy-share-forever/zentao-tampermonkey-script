@@ -8,6 +8,7 @@ function hiddenTaskWithPrimaryBtn(doc, checkName) {
     return
   }
   let currentMainTask = null
+  let currentMainTaskIndex = -1
   let currentMainTaskNeedShow = false
   $taskList.each(function (index) {
     const $el = $(this)
@@ -23,9 +24,10 @@ function hiddenTaskWithPrimaryBtn(doc, checkName) {
       // 先判断上一个含子任务的主任务元素存在，需要判断是否需要隐藏
       // 重新赋值当前主任务
       if (currentMainTask) {
-        currentMainTask.css('display', currentMainTaskNeedShow ? 'table-row' : 'none')
+        currentMainTask.css('display', (currentMainTaskNeedShow || ((index - currentMainTaskIndex) === 1)) ? 'table-row' : 'none')
       }
       currentMainTask = $el
+      currentMainTaskIndex = index
       currentMainTaskNeedShow = false
     }
     // 遍历到最后一个时，最近一个主任务的显隐判断还未完成
@@ -37,7 +39,8 @@ function hiddenTaskWithPrimaryBtn(doc, checkName) {
 
 // 任务列表根据人筛选
 export function taskListFilterByRole(doc) {
-  if (!window.location.search.includes('f=task')) return
+  const search = window.location.search
+  if (!(search.includes('f=task') && (search.includes('type=all') || search.includes('type=unclosed')))) return
   if (doc.querySelector('.custom-filter-box')) return
   const nodeList = $(doc.querySelectorAll('.c-assignedTo.has-btn'))
   const $box = $(doc.createElement('div'))
