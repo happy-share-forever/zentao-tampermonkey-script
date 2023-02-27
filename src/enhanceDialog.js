@@ -1,5 +1,5 @@
 import { enhanceHistoryList } from './enhanceHistoryList.js'
-import {Context} from './class/Context.js'
+import { Context } from './class/Context.js'
 
 export function enhanceDialog (mutations, ctx) {
   const document = ctx.document
