@@ -1,4 +1,5 @@
 import { enhanceHistoryList } from './enhanceHistoryList.js'
+import { Context } from './class/Context.js'
 
 export function enhanceDialog (mutations, ctx) {
   const document = ctx.document
@@ -9,7 +10,7 @@ export function enhanceDialog (mutations, ctx) {
         // 任务详情弹窗
         firstChild.off('load').on('load', function () {
           const doc = firstChild[0].contentWindow.document
-          enhanceHistoryList(ctx)
+          enhanceHistoryList(Context.of(firstChild[0]))
           const toolbar = $(doc.querySelector('.main-actions > .btn-toolbar'))
 
           // 复制分支
