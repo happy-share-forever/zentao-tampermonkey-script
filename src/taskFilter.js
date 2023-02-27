@@ -23,22 +23,26 @@ function hiddenTaskWithPrimaryBtn(doc, checkName) {
     } else {
       // 先判断上一个含子任务的主任务元素存在，需要判断是否需要隐藏
       // 重新赋值当前主任务
-      if (currentMainTask) {
-        currentMainTask.css('display', (currentMainTaskNeedShow || ((index - currentMainTaskIndex) === 1)) ? 'table-row' : 'none')
+      if (index === $taskList.length - 1) { // 最后一个任务是主任务
+        const show = $el.find('.c-assignedTo.has-btn').text().trim() === checkName
+        $el.css('display', show ? 'table-row' : 'none')
+      }
+      if (currentMainTaskIndex > -1 && (index - currentMainTaskIndex) === 1) {
+        const show = currentMainTask.find('.c-assignedTo.has-btn').text().trim() === checkName
+        currentMainTask.css('display', show ? 'table-row' : 'none')
+      } else if (currentMainTask) {
+        currentMainTask.css('display', currentMainTaskNeedShow ? 'table-row' : 'none')
       }
       currentMainTask = $el
       currentMainTaskIndex = index
       currentMainTaskNeedShow = false
     }
-    // 遍历到最后一个时，最近一个主任务的显隐判断还未完成
-    if (index === $taskList.length - 1 && currentMainTask) {
-      currentMainTask.css('display', currentMainTaskNeedShow ? 'table-row' : 'none')
-    }
   })
 }
 
 // 任务列表根据人筛选
-export function taskListFilterByRole(doc) {
+export function taskListFilterByRole(ctx) {
+  const doc= ctx.document
   const search = window.location.search
   if (!(search.includes('f=task') && (search.includes('type=all') || search.includes('type=unclosed')))) return
   if (doc.querySelector('.custom-filter-box')) return

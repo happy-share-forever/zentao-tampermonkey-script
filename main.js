@@ -16,7 +16,7 @@ function enhanceExecution () {
       enhanceTask(ctx)
       enhanceKanBan(ctx)
       enhanceHistoryList(ctx)
-      taskListFilterByRole(doc)
+      taskListFilterByRole(ctx)
       const observer = new MutationObserver((mutations) => {
         ctx.resetKanbanRefreshTag()
         enhanceTask(ctx)
