@@ -1,6 +1,6 @@
 {
   "name": "zentao-tampermonkey-script",
-  "version": "2.19",
+  "version": "2.20",
   "description": "ZenTao style and function enhancement",
   "author": "happy share forever core team",
   "main": "main.js",
