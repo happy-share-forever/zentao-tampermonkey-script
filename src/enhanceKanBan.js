@@ -221,7 +221,7 @@ function enhanceKanBanClosedTask (kanbanData, ctx) {
 
 export function enhanceKanBan (ctx) {
   const document = ctx.document
-  const $container = $(document.getElementById('#kanban > table'))
+  const $container = $(document.querySelector('#kanban > table'))
   if ($container.hasClass('enhanceKanBan') && ctx.kanbanRefreshed) return
   $container.addClass('enhanceKanBan')
   ctx.setKanbanRefreshTag()

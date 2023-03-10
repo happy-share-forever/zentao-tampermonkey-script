@@ -18,7 +18,7 @@ export function enhanceHistoryList (ctx) {
   const $titleBox = $(doc.querySelector('.histories .detail-title'))
   const $hideBtn = $(doc.createElement('a'))
   $hideBtn.addClass('btn btn-link pull-right histories-custom-filter-btn')
-  $hideBtn.html('只看备注')
+  $hideBtn.html('查看全部')
   $hideBtn.on('click', function () {
     if ($hideBtn.html() === '只看备注') {
       fn('hide')
@@ -29,4 +29,6 @@ export function enhanceHistoryList (ctx) {
     }
   })
   $hideBtn.appendTo($titleBox)
+  // 默认查看
+  fn('hide')
 }
