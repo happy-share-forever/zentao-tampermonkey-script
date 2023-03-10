@@ -20,6 +20,10 @@ function hiddenTaskWithPrimaryBtn(doc, checkName) {
         const taskId = currentMainTask.attr('data-id')
         if ($el.hasClass(`parent-${taskId}`) && show) currentMainTaskNeedShow = true
       }
+      //  最后一个任务是子任务，需要判断到当前父组件是否需要显示
+      if (index === $taskList.length - 1) {
+        currentMainTask.css('display', currentMainTaskNeedShow ? 'table-row' : 'none')
+      }
     } else {
       // 先判断上一个含子任务的主任务元素存在，需要判断是否需要隐藏
       // 重新赋值当前主任务
