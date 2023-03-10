@@ -4,6 +4,7 @@ import { enhanceHistoryList } from './src/enhanceHistoryList.js'
 import { enhanceTask } from './src/enhanceTask.js'
 import { enhanceKanBan } from './src/enhanceKanBan.js'
 import { enhanceDialog } from './src/enhanceDialog.js'
+import { taskListFilterByRole } from './src/taskFilter'
 
 function enhanceExecution () {
   const executionIframe = document.querySelector('#appIframe-execution')
@@ -15,6 +16,7 @@ function enhanceExecution () {
       enhanceTask(ctx)
       enhanceKanBan(ctx)
       enhanceHistoryList(ctx)
+      taskListFilterByRole(ctx)
       const observer = new MutationObserver((mutations) => {
         enhanceTask(ctx)
         enhanceKanBan(ctx)

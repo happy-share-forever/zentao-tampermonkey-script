@@ -15,3 +15,6 @@ GM_addStyle('.m-execution-kanban #kanban .group-title { line-height: 20px !impor
 
 // 弹出层，只看备注按钮
 GM_addStyle('.histories-custom-filter-btn { margin-right: 8px }')
+
+GM_addStyle('.custom-filter-btn { margin-right: 8px }')
+GM_addStyle('.custom-filter-box {margin-top: 8px; margin-bottom: 8px}')
