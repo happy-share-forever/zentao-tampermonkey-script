@@ -27,7 +27,7 @@ export function enhanceKanBanStory (target, ctx) {
     const $copyLink = $(document.createElement('li'))
     $copyLink.html('<a>复制链接</a>')
     $copyLink.on('click', function () {
-      const link = `${urlDomain}/index.php?m=story&f=view&storyID=${storyId}`
+      const link = `${ctx.urlDomain}/index.php?m=story&f=view&storyID=${storyId}`
       GM_setClipboard(link, { type: 'text', mimetype: 'text/plain' })
     })
     $copyLink.appendTo($ul)
