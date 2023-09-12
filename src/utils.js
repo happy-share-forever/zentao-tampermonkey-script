@@ -20,3 +20,6 @@ export function isAllText (btnArr) {
     return !trim || trim === ALL_TEXT
   })
 }
+export function delay (fn, delay = 200) {
+  setTimeout(fn, delay)
+}

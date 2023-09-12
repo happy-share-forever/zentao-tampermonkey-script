@@ -4,7 +4,17 @@ import { enhanceHistoryList } from './src/enhanceHistoryList.js'
 import { enhanceTask } from './src/enhanceTask.js'
 import { enhanceKanBan } from './src/enhanceKanBan.js'
 import { enhanceDialog } from './src/enhanceDialog.js'
+import { debounce, delay } from './src/utils.js'
 
+const fixBackBtn = function (ctx) {
+  delay(() => {
+    const $aDom = $(ctx.window.document).find('a[href*="json"]')
+    $aDom.each((idx, item) => {
+      item.href="javascript:window.history.back()";
+    })
+  })
+}
+const debouncedFixBackBtn = debounce(fixBackBtn, 1000)
 function enhanceExecution () {
   const executionIframe = document.querySelector('#appIframe-execution')
   if (executionIframe) {
@@ -15,11 +25,13 @@ function enhanceExecution () {
       enhanceTask(ctx)
       enhanceKanBan(ctx)
       enhanceHistoryList(ctx)
+      debouncedFixBackBtn(ctx)
       const observer = new MutationObserver((mutations) => {
         enhanceTask(ctx)
         enhanceKanBan(ctx)
         enhanceDialog(mutations, ctx)
         enhanceHistoryList(ctx)
+        debouncedFixBackBtn(ctx)
       })
       observer.observe(doc.body, {
         childList: true,
